@@ -4,6 +4,7 @@ import { useCompressor } from './hooks/useCompressor';
 import { Dropzone } from './components/Dropzone';
 import { SettingsBar } from './components/SettingsBar';
 import { ImageCard } from './components/ImageCard';
+import { CompareModal } from './components/CompareModal';
 import { downloadBlob, formatBytes, savedPercent } from './lib/format';
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
     clearAll,
   } = useCompressor();
   const [zipping, setZipping] = useState(false);
+  const [compareId, setCompareId] = useState<string | null>(null);
 
   const done = useMemo(
     () => items.filter((i) => i.status === 'done' && i.outputBlob),
@@ -28,6 +30,11 @@ export default function App() {
     const compressed = done.reduce((s, i) => s + (i.outputSize ?? 0), 0);
     return { original, compressed, saved: savedPercent(original, compressed) };
   }, [done]);
+
+  const compareItem = useMemo(
+    () => items.find((i) => i.id === compareId && i.outputUrl),
+    [items, compareId],
+  );
 
   const downloadAll = async () => {
     if (!done.length) return;
@@ -56,6 +63,13 @@ export default function App() {
           for fast e-commerce pages. Everything runs in your browser; images
           never leave your device.
         </p>
+        <div className="hero__badges">
+          <span className="chip">
+            <span className="chip__dot" aria-hidden /> 100% in your browser
+          </span>
+          <span className="chip">No uploads</span>
+          <span className="chip">JPEG · PNG · WebP</span>
+        </div>
       </header>
 
       <main className="container">
@@ -73,12 +87,17 @@ export default function App() {
             <div className="toolbar__stats">
               {done.length > 0 ? (
                 <>
-                  <strong>{totals.saved}%</strong> smaller ·{' '}
-                  {formatBytes(totals.original)} → {formatBytes(totals.compressed)} ·{' '}
-                  {done.length}/{items.length} done
+                  <span className="toolbar__saved">{totals.saved}%</span>
+                  <span className="toolbar__detail">
+                    smaller · {formatBytes(totals.original)} →{' '}
+                    {formatBytes(totals.compressed)} · {done.length}/{items.length}{' '}
+                    done
+                  </span>
                 </>
               ) : (
-                <>Processing {items.length} image{items.length > 1 ? 's' : ''}…</>
+                <span className="toolbar__detail">
+                  Processing {items.length} image{items.length > 1 ? 's' : ''}…
+                </span>
               )}
             </div>
             <div className="toolbar__actions">
@@ -99,7 +118,12 @@ export default function App() {
 
         <div className="grid">
           {items.map((item) => (
-            <ImageCard key={item.id} item={item} onRemove={removeItem} />
+            <ImageCard
+              key={item.id}
+              item={item}
+              onRemove={removeItem}
+              onCompare={(it) => setCompareId(it.id)}
+            />
           ))}
         </div>
       </main>
@@ -114,6 +138,10 @@ export default function App() {
           Squoosh. 100% client-side &amp; open source.
         </p>
       </footer>
+
+      {compareItem && (
+        <CompareModal item={compareItem} onClose={() => setCompareId(null)} />
+      )}
     </div>
   );
 }
