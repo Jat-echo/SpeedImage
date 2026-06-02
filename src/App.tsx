@@ -5,6 +5,7 @@ import { Dropzone } from './components/Dropzone';
 import { SettingsBar } from './components/SettingsBar';
 import { ImageCard } from './components/ImageCard';
 import { CompareModal } from './components/CompareModal';
+import { Logo } from './components/Logo';
 import { downloadBlob, formatBytes, savedPercent } from './lib/format';
 
 export default function App() {
@@ -53,9 +54,7 @@ export default function App() {
     <div className="app">
       <header className="hero">
         <h1 className="hero__title">
-          <span className="hero__bolt" aria-hidden>
-            ⚡
-          </span>
+          <Logo className="hero__logo" />
           SpeedImage
         </h1>
         <p className="hero__tagline">

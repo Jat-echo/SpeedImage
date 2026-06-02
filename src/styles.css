@@ -81,9 +81,11 @@ a:hover {
   color: transparent;
 }
 
-.hero__bolt {
-  -webkit-text-fill-color: initial;
-  filter: drop-shadow(0 0 14px rgba(56, 224, 199, 0.65));
+.hero__logo {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+  filter: drop-shadow(0 5px 16px rgba(91, 140, 255, 0.45));
 }
 
 .hero__tagline {

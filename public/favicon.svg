@@ -1,0 +1,25 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SpeedImage logo">
+  <defs>
+    <linearGradient id="si-bg" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5b8cff"/>
+      <stop offset="0.5" stop-color="#6d5bff"/>
+      <stop offset="1" stop-color="#38e0c7"/>
+    </linearGradient>
+    <linearGradient id="si-bolt" x1="22" y1="9" x2="42" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dffaf2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- App tile -->
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="url(#si-bg)"/>
+  <!-- Top sheen -->
+  <path d="M18 3h28a15 15 0 0 1 15 15v4H3v-4A15 15 0 0 1 18 3Z" fill="#ffffff" opacity="0.12"/>
+
+  <!-- Photo: sun + mountains (the "image") -->
+  <circle cx="22" cy="21" r="5" fill="#ffffff" opacity="0.9"/>
+  <path d="M5 52 V40 l11-12 10 12 8-7 12 13 v6 a4 4 0 0 1-4 4 H9 a4 4 0 0 1-4-4 Z" fill="#ffffff" opacity="0.28"/>
+
+  <!-- Speed bolt -->
+  <path d="M37 7 L19 35 h11 l-4 22 21-30 H35 Z" fill="url(#si-bolt)" stroke="#0b1020" stroke-width="0.5" stroke-opacity="0.06" stroke-linejoin="round"/>
+</svg>
