@@ -3,8 +3,22 @@
 import { decode as decodeJpeg, encode as encodeJpeg } from '@jsquash/jpeg';
 import { decode as decodePng } from '@jsquash/png';
 import { decode as decodeWebp, encode as encodeWebp } from '@jsquash/webp';
-import optimisePng from '@jsquash/oxipng/optimise';
+// Use OxiPNG's single-threaded build directly. The package's default `optimise`
+// auto-selects a parallel (rayon) build inside Workers, but that needs
+// SharedArrayBuffer / cross-origin isolation (COOP+COEP) — which static hosts
+// like GitHub Pages don't provide. In that case `initThreadPool` deadlocks and
+// PNG encoding hangs forever, so we pin the ST build that always works.
+import initOxipng, {
+  optimise_raw as oxipngOptimiseRaw,
+} from '@jsquash/oxipng/codec/pkg/squoosh_oxipng.js';
 import resize from '@jsquash/resize';
+
+let oxipngReady: Promise<unknown> | null = null;
+/** Initialise the single-threaded OxiPNG WASM module once, lazily. */
+function ensureOxipng(): Promise<unknown> {
+  if (!oxipngReady) oxipngReady = initOxipng();
+  return oxipngReady;
+}
 import type {
   CodecFormat,
   CompressRequest,
@@ -59,10 +73,15 @@ function resolveOutput(format: OutputFormat, input: CodecFormat): CodecFormat {
   }
 }
 
-/** Map the 1-100 quality slider onto OxiPNG's 1-6 optimization effort level. */
-function qualityToOxipngLevel(quality: number): number {
-  return Math.min(6, Math.max(1, Math.round((quality / 100) * 5) + 1));
-}
+/**
+ * Fixed OxiPNG effort level for lossless PNG output.
+ *
+ * PNG is lossless, so the quality slider is disabled for it and this only
+ * controls how hard OxiPNG searches. We run single-threaded (GitHub Pages isn't
+ * cross-origin isolated), where high levels can take minutes on large images and
+ * look like a hang. Level 2 (OxiPNG's own default) is a good speed/size balance.
+ */
+const PNG_EFFORT_LEVEL = 2;
 
 async function encodeImage(
   fmt: CodecFormat,
@@ -74,12 +93,20 @@ async function encodeImage(
       return encodeJpeg(image, { quality });
     case 'webp':
       return encodeWebp(image, { quality });
-    case 'png':
+    case 'png': {
       // OxiPNG is lossless; "quality" controls how hard it searches.
-      return optimisePng(image, {
-        level: qualityToOxipngLevel(quality),
-        optimiseAlpha: true,
-      });
+      await ensureOxipng();
+      const optimised = oxipngOptimiseRaw(
+        image.data,
+        image.width,
+        image.height,
+        PNG_EFFORT_LEVEL,
+        false, // interlace
+        true, // optimiseAlpha
+      );
+      // ST build uses non-shared memory, so this is always a plain ArrayBuffer.
+      return optimised.buffer as ArrayBuffer;
+    }
   }
 }
 
