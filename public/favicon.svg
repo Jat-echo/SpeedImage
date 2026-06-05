@@ -1,13 +1,13 @@
 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SpeedImage logo">
   <defs>
     <linearGradient id="si-bg" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5b8cff"/>
-      <stop offset="0.5" stop-color="#6d5bff"/>
-      <stop offset="1" stop-color="#38e0c7"/>
+      <stop stop-color="#8ea3ac"/>
+      <stop offset="0.5" stop-color="#a99c9b"/>
+      <stop offset="1" stop-color="#93a585"/>
     </linearGradient>
     <linearGradient id="si-bolt" x1="22" y1="9" x2="42" y2="55" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#dffaf2"/>
+      <stop stop-color="#fbf9f4"/>
+      <stop offset="1" stop-color="#eef1e9"/>
     </linearGradient>
   </defs>
 

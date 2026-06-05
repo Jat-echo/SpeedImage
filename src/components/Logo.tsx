@@ -14,13 +14,13 @@ export function Logo({ className }: Props) {
     >
       <defs>
         <linearGradient id="si-bg" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#5b8cff" />
-          <stop offset="0.5" stopColor="#6d5bff" />
-          <stop offset="1" stopColor="#38e0c7" />
+          <stop stopColor="#8ea3ac" />
+          <stop offset="0.5" stopColor="#a99c9b" />
+          <stop offset="1" stopColor="#93a585" />
         </linearGradient>
         <linearGradient id="si-bolt" x1="22" y1="9" x2="42" y2="55" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#dffaf2" />
+          <stop stopColor="#fbf9f4" />
+          <stop offset="1" stopColor="#eef1e9" />
         </linearGradient>
       </defs>
 
