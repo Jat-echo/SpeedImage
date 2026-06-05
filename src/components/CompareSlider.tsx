@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { useI18n } from '../i18n';
 
 interface Props {
   /** Left side of the wipe — the original image. */
@@ -17,6 +18,7 @@ interface Props {
  * up pixel-for-pixel.
  */
 export function CompareSlider({ beforeUrl, afterUrl, alt }: Props) {
+  const { t } = useI18n();
   const [pos, setPos] = useState(50);
   const ref = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -68,8 +70,8 @@ export function CompareSlider({ beforeUrl, afterUrl, alt }: Props) {
         <img src={beforeUrl} alt="" draggable={false} />
       </div>
 
-      <span className="compare__tag compare__tag--left">Before</span>
-      <span className="compare__tag compare__tag--right">After</span>
+      <span className="compare__tag compare__tag--left">{t.compare.before}</span>
+      <span className="compare__tag compare__tag--right">{t.compare.after}</span>
 
       <div
         className="compare__handle"

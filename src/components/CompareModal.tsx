@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import type { ImageItem } from '../types';
 import { formatBytes, savedPercent } from '../lib/format';
 import { CompareSlider } from './CompareSlider';
+import { useI18n } from '../i18n';
 
 interface Props {
   item: ImageItem;
@@ -17,6 +18,7 @@ function formatLabel(type?: string): string {
 }
 
 export function CompareModal({ item, onClose }: Props) {
+  const { t } = useI18n();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -43,7 +45,7 @@ export function CompareModal({ item, onClose }: Props) {
             type="button"
             className="modal__close"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t.compare.close}
           >
             ✕
           </button>
@@ -57,17 +59,17 @@ export function CompareModal({ item, onClose }: Props) {
 
         <div className="modal__stats">
           <div className="stat">
-            <span className="stat__k">Before</span>
+            <span className="stat__k">{t.compare.before}</span>
             <span className="stat__v">{formatBytes(item.originalSize)}</span>
           </div>
           <div className="stat">
-            <span className="stat__k">After</span>
+            <span className="stat__k">{t.compare.after}</span>
             <span className="stat__v stat__v--good">
               {formatBytes(item.outputSize ?? 0)}
             </span>
           </div>
           <div className="stat">
-            <span className="stat__k">Saved</span>
+            <span className="stat__k">{t.compare.saved}</span>
             <span
               className={`stat__v ${saved >= 0 ? 'stat__v--good' : 'stat__v--bad'}`}
             >
@@ -76,7 +78,7 @@ export function CompareModal({ item, onClose }: Props) {
           </div>
           {item.width != null && (
             <div className="stat">
-              <span className="stat__k">Dimensions</span>
+              <span className="stat__k">{t.compare.dimensions}</span>
               <span className="stat__v">
                 {item.width}×{item.height}
               </span>
@@ -84,16 +86,13 @@ export function CompareModal({ item, onClose }: Props) {
           )}
           {item.outputType && (
             <div className="stat">
-              <span className="stat__k">Format</span>
+              <span className="stat__k">{t.compare.format}</span>
               <span className="stat__v">{formatLabel(item.outputType)}</span>
             </div>
           )}
         </div>
 
-        <p className="modal__hint">
-          Drag the divider (or use ← →) to compare — left is the original, right
-          is compressed.
-        </p>
+        <p className="modal__hint">{t.compare.hint}</p>
       </div>
     </div>
   );

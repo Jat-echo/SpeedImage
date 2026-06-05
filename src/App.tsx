@@ -7,8 +7,15 @@ import { ImageCard } from './components/ImageCard';
 import { CompareModal } from './components/CompareModal';
 import { Logo } from './components/Logo';
 import { downloadBlob, formatBytes, savedPercent } from './lib/format';
+import { useI18n, type Lang } from './i18n';
+
+const LANGS: { code: Lang; label: string }[] = [
+  { code: 'en', label: 'EN' },
+  { code: 'zh', label: '中' },
+];
 
 export default function App() {
+  const { t, lang, setLang } = useI18n();
   const {
     items,
     settings,
@@ -52,22 +59,36 @@ export default function App() {
 
   return (
     <div className="app">
+      <div
+        className="langtoggle"
+        role="group"
+        aria-label={t.langLabel}
+      >
+        {LANGS.map(({ code, label }) => (
+          <button
+            key={code}
+            type="button"
+            className={`langtoggle__btn${lang === code ? ' is-active' : ''}`}
+            aria-pressed={lang === code}
+            onClick={() => setLang(code)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       <header className="hero">
         <h1 className="hero__title">
           <Logo className="hero__logo" />
           SpeedImage
         </h1>
-        <p className="hero__tagline">
-          Batch-compress JPEG, PNG &amp; WebP with near-lossless quality — built
-          for fast e-commerce pages. Everything runs in your browser; images
-          never leave your device.
-        </p>
+        <p className="hero__tagline">{t.hero.tagline}</p>
         <div className="hero__badges">
           <span className="chip">
-            <span className="chip__dot" aria-hidden /> 100% in your browser
+            <span className="chip__dot" aria-hidden /> {t.hero.inBrowser}
           </span>
-          <span className="chip">No uploads</span>
-          <span className="chip">JPEG · PNG · WebP</span>
+          <span className="chip">{t.hero.noUploads}</span>
+          <span className="chip">{t.hero.formats}</span>
         </div>
       </header>
 
@@ -88,14 +109,17 @@ export default function App() {
                 <>
                   <span className="toolbar__saved">{totals.saved}%</span>
                   <span className="toolbar__detail">
-                    smaller · {formatBytes(totals.original)} →{' '}
-                    {formatBytes(totals.compressed)} · {done.length}/{items.length}{' '}
-                    done
+                    {t.toolbar.detail(
+                      formatBytes(totals.original),
+                      formatBytes(totals.compressed),
+                      done.length,
+                      items.length,
+                    )}
                   </span>
                 </>
               ) : (
                 <span className="toolbar__detail">
-                  Processing {items.length} image{items.length > 1 ? 's' : ''}…
+                  {t.toolbar.processing(items.length)}
                 </span>
               )}
             </div>
@@ -106,10 +130,10 @@ export default function App() {
                 onClick={downloadAll}
                 disabled={!done.length || zipping}
               >
-                {zipping ? 'Zipping…' : `Download all (${done.length})`}
+                {zipping ? t.toolbar.zipping : t.toolbar.downloadAll(done.length)}
               </button>
               <button type="button" className="btn btn--ghost" onClick={clearAll}>
-                Clear
+                {t.toolbar.clear}
               </button>
             </div>
           </div>
@@ -129,12 +153,11 @@ export default function App() {
 
       <footer className="footer">
         <p>
-          Powered by{' '}
+          {t.footer.pre}
           <a href="https://github.com/jamsinclair/jSquash" target="_blank" rel="noreferrer">
             jSquash
-          </a>{' '}
-          WebAssembly codecs (MozJPEG · libwebp · OxiPNG), derived from Google
-          Squoosh. 100% client-side &amp; open source.
+          </a>
+          {t.footer.post}
         </p>
       </footer>
 

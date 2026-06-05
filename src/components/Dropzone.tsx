@@ -1,10 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
+import { useI18n } from '../i18n';
 
 interface Props {
   onFiles: (files: File[]) => void;
 }
 
 export function Dropzone({ onFiles }: Props) {
+  const { t } = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
@@ -36,8 +38,8 @@ export function Dropzone({ onFiles }: Props) {
       <div className="dropzone__icon" aria-hidden>
         ⬆
       </div>
-      <p className="dropzone__title">Drop images here, or click to browse</p>
-      <p className="dropzone__hint">JPEG · PNG · WebP — batch upload supported</p>
+      <p className="dropzone__title">{t.dropzone.title}</p>
+      <p className="dropzone__hint">{t.dropzone.hint}</p>
       <input
         ref={inputRef}
         type="file"

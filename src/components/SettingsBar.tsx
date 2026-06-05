@@ -1,4 +1,5 @@
 import type { CompressionSettings, OutputFormat } from '../types';
+import { useI18n } from '../i18n';
 
 interface Props {
   settings: CompressionSettings;
@@ -7,38 +8,26 @@ interface Props {
   hasItems: boolean;
 }
 
-const FORMAT_OPTIONS: { value: OutputFormat; label: string }[] = [
-  { value: 'smart', label: 'Smart (recommended)' },
-  { value: 'original', label: 'Keep original' },
-  { value: 'webp', label: 'WebP' },
-  { value: 'jpeg', label: 'JPEG' },
-  { value: 'png', label: 'PNG (lossless)' },
-];
-
-const RESIZE_OPTIONS: { value: number | null; label: string }[] = [
-  { value: null, label: 'No resize' },
-  { value: 3000, label: '3000 px' },
-  { value: 2000, label: '2000 px' },
-  { value: 1600, label: '1600 px' },
-  { value: 1200, label: '1200 px' },
-];
+const FORMAT_VALUES: OutputFormat[] = ['smart', 'original', 'webp', 'jpeg', 'png'];
+const RESIZE_VALUES: (number | null)[] = [null, 3000, 2000, 1600, 1200];
 
 export function SettingsBar({ settings, onChange, onApply, hasItems }: Props) {
+  const { t } = useI18n();
   const losslessPng = settings.format === 'png';
 
   return (
     <div className="settings">
       <label className="settings__field">
-        <span className="settings__label">Output format</span>
+        <span className="settings__label">{t.settings.format}</span>
         <select
           value={settings.format}
           onChange={(e) =>
             onChange({ ...settings, format: e.target.value as OutputFormat })
           }
         >
-          {FORMAT_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
+          {FORMAT_VALUES.map((value) => (
+            <option key={value} value={value}>
+              {t.settings.formatOptions[value]}
             </option>
           ))}
         </select>
@@ -46,8 +35,8 @@ export function SettingsBar({ settings, onChange, onApply, hasItems }: Props) {
 
       <label className="settings__field settings__field--quality">
         <span className="settings__label">
-          Quality
-          <strong>{losslessPng ? 'lossless' : settings.quality}</strong>
+          {t.settings.quality}
+          <strong>{losslessPng ? t.settings.lossless : settings.quality}</strong>
         </span>
         <input
           type="range"
@@ -62,7 +51,7 @@ export function SettingsBar({ settings, onChange, onApply, hasItems }: Props) {
       </label>
 
       <label className="settings__field">
-        <span className="settings__label">Max dimension</span>
+        <span className="settings__label">{t.settings.maxDim}</span>
         <select
           value={settings.maxEdge ?? ''}
           onChange={(e) =>
@@ -72,9 +61,9 @@ export function SettingsBar({ settings, onChange, onApply, hasItems }: Props) {
             })
           }
         >
-          {RESIZE_OPTIONS.map((o) => (
-            <option key={String(o.value)} value={o.value ?? ''}>
-              {o.label}
+          {RESIZE_VALUES.map((value) => (
+            <option key={String(value)} value={value ?? ''}>
+              {value == null ? t.settings.noResize : `${value} px`}
             </option>
           ))}
         </select>
@@ -86,7 +75,7 @@ export function SettingsBar({ settings, onChange, onApply, hasItems }: Props) {
         onClick={onApply}
         disabled={!hasItems}
       >
-        Re-compress all
+        {t.settings.recompress}
       </button>
     </div>
   );

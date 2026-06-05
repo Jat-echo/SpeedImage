@@ -1,5 +1,6 @@
 import type { ImageItem } from '../types';
 import { downloadBlob, formatBytes, savedPercent } from '../lib/format';
+import { useI18n } from '../i18n';
 
 interface Props {
   item: ImageItem;
@@ -16,6 +17,7 @@ function formatLabel(type?: string): string {
 }
 
 export function ImageCard({ item, onRemove, onCompare }: Props) {
+  const { t } = useI18n();
   const saved =
     item.outputSize != null ? savedPercent(item.originalSize, item.outputSize) : 0;
   const previewUrl = item.outputUrl ?? item.originalUrl;
@@ -28,7 +30,7 @@ export function ImageCard({ item, onRemove, onCompare }: Props) {
         onClick={comparable ? () => onCompare(item) : undefined}
         role={comparable ? 'button' : undefined}
         tabIndex={comparable ? 0 : undefined}
-        title={comparable ? 'Compare before / after' : undefined}
+        title={comparable ? t.card.compareTitle : undefined}
         onKeyDown={
           comparable
             ? (e) => {
@@ -48,7 +50,7 @@ export function ImageCard({ item, onRemove, onCompare }: Props) {
         )}
         {comparable && (
           <span className="card__compare-hint" aria-hidden>
-            ‹›&nbsp; Compare
+            ‹›&nbsp; {t.card.compare}
           </span>
         )}
       </div>
@@ -58,9 +60,13 @@ export function ImageCard({ item, onRemove, onCompare }: Props) {
           {item.outputName ?? item.name}
         </div>
 
-        {item.status === 'queued' && <div className="card__status">Queued…</div>}
+        {item.status === 'queued' && (
+          <div className="card__status">{t.card.queued}</div>
+        )}
         {item.status === 'processing' && (
-          <div className="card__status card__status--busy">Compressing…</div>
+          <div className="card__status card__status--busy">
+            {t.card.compressing}
+          </div>
         )}
         {item.status === 'error' && (
           <div className="card__status card__status--error">{item.error}</div>
@@ -89,7 +95,7 @@ export function ImageCard({ item, onRemove, onCompare }: Props) {
             className="btn btn--small"
             onClick={() => downloadBlob(item.outputBlob!, item.outputName!)}
           >
-            Download
+            {t.card.download}
           </button>
         )}
         {comparable && (
@@ -98,14 +104,14 @@ export function ImageCard({ item, onRemove, onCompare }: Props) {
             className="btn btn--small btn--ghost"
             onClick={() => onCompare(item)}
           >
-            Compare
+            {t.card.compare}
           </button>
         )}
         <button
           type="button"
           className="btn btn--small btn--ghost"
           onClick={() => onRemove(item.id)}
-          aria-label="Remove"
+          aria-label={t.card.remove}
         >
           ✕
         </button>

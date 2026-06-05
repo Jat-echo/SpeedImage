@@ -66,6 +66,42 @@ a:hover {
   border-radius: 8px;
 }
 
+/* Language toggle */
+.langtoggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 40;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(8px);
+}
+
+.langtoggle__btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  min-width: 34px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.langtoggle__btn:hover {
+  color: var(--text);
+}
+.langtoggle__btn.is-active {
+  background: var(--accent);
+  color: #f8f5ef;
+}
+
 /* Hero */
 .hero {
   text-align: center;
